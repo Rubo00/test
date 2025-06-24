@@ -1,10 +1,25 @@
-from get_names import read_names
-from get_initials import format_names
-from config import READ_PATH, WRITE_PATH
-import config
-def main():
-    names = read_names(READ_PATH)
-    formated_names=format_names(names)
-    print(formated_names)
+from bot_utils import bot_turn
+from field_utils import generate_field, check_winner
+from printing import print_field, print_hello, print_winner
+from user_input import user_turn
 
-main()
+def check_end_game(field) -> None:
+    winner = check_winner(field)
+    if winner:
+        print_field(field)
+        print_winner(winner)
+        exit(0)
+ 
+def main():
+    print_hello()
+    field = generate_field()
+    while True:
+        print_field(field)
+        user_turn(field)
+        check_end_game(field)
+        bot_turn(field)
+        check_end_game(field)
+
+
+if __name__ == "__main__":
+    main()
