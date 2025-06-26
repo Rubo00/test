@@ -1,136 +1,100 @@
-"""class User:
-    def __init__(self, name:str , age:int) : 
-        self.name = name
-        self.age = age
-    def hello(self):
-        print(f"Привет ,я {self.name}, мне {self.age}")
-sasha = User("sasha", 22)
-petya = User("petya", 23)
-sasha.hello()
-petya.hello()"""
+"""from dataclasses import dataclass
 
-"""from datetime import datetime
+
+class Service:
+    endpoint = "test"
+
+    @classmethod
+    def call(cls):
+        print(cls.endpoint)
+
+
+# Service.call()
+
+
+@dataclass
+class UserData:
+    login: str
+    age: int
 
 
 class User:
-    def __init__(self, name: str):
-        self.name = name
-
-
-class Question:
-    def __init__(self, question: str, answer: str, difficulty: int):
-        self.question = question
-        self.answer = answer
-        self.difficulty = difficulty
-
-    def print(self):
-        print(self.question)
-
-    def check_answer(self, user_answer: str) -> bool:
-        return self.answer.lower() == user_answer.lower()
-
-
-class Game:
-    def __init__(self, user: User, questions: list[Question]):
-        self.score = 0
-        self.user = user
-        self.start_time = datetime.now()
-        self.questions = questions
-        self.index_of_questions = 0
-        self.last_index = len(questions) - 1
-
-    def print_question(self):
-        self.current_question = self.questions[self.index_of_questions]
-        self.current_question.print()
-
-    def user_answer(self):
-        user_input = input(": ")
-        if self.current_question.check_answer(user_input):
-            self.score += self.current_question.difficulty
-            print("ОК")
-        else:
-            print("НЕ ОК")
-        self.index_of_questions += 1
-
-    def end(self):
-        sec = (datetime.now() - self.start_time).total_seconds()
-        print(f"Поздравляю {self.user.name}, вы завершили игру за {sec} и набрали {self.index_of_questions} баллов")   
-
-def main():
-    name = input("Имя: ")
-    user = User(name)
-    questions = [
-        Question("Столица России?", "Москва", 1),
-        Question("Столица Франции?", "Париж", 2),
-    ]
-    game = Game(user, questions)
-    while game.index_of_questions <= game.last_index:
-        game.print_question()
-        game.user_answer()
-    game.end()
-   
-
-    
-main()"""
-
-"""class User:
-    def __init__(self, username: str):
+    def __init__(self, username: str, age: int):
         self.username = username
-        self._is_muted = False
-        self.role = "user"
+        self.age = age
 
-    def set_muted(self):
-        self._is_muted = True
-
-    def get_role_name(self):
-        return f"{self.role} {self.username}"
-
-    def write(self, message: str):
-        if not self._is_muted:
-            print(f"{self.get_role_name()}: {message}")
-        else:
-            print(f"{self.get_role_name()} молчит")
+    @classmethod
+    def from_userdata(cls, user_data: UserData):
+        return cls(user_data.login, user_data.age)
 
 
-class Admin(User):
-    def __init__(self, username: str, role="admin"):
-        super().__init__(username)
-        self.role = role
-
-    def set_muted(self):
-        pass
-
-    def mute(self, user: User):
-        user.set_muted()
-        print(f"Администратор {self.username} заглушил {user.username}")
+user_data = UserData("test", 22)
+user = User.from_userdata(user_data)
+print(user.age)
 
 
-user1 = User("sasha")
-user1.write("Првиет всем!")
-admin1 = Admin("admin", "best_admin")
-admin1.write("Всем привет!")
-user1.write("********")
-admin1.mute(user1)
-user1.write("Я пошутил!")"""
+class UserService:
+    atrib = 22
 
-class Animal:
-    def __init__(self, name: str , color: str ):
-        self.name = name
-        self.color = color 
-        
-
-class Wolf(Animal):
-    def __init__(self, color: str ):
-        say = ("воет")
-        color = "серий"
-        print (f"волк иммеет {color} цвет, имеет возможность говорить {say}")
-      
-class Dog(Animal):
-    def __init__(self,name: str , color: str ):
-        say = ("гав")
-        color = "белый"
-        name = "Дастин"
-        print (f"собака иммеет {color} цвет, собаке зовут {name}, имеет возможность говорить {say}")
+    @staticmethod
+    def func():
+        return
 
 
+class PostService:
+    @staticmethod
+    def func(text: str):
+        return text
 
+
+PostService.func("text")
+UserService.func()"""
+
+
+from dataclasses import dataclass
+import json
+from typing import Any
+
+
+@dataclass
+class UserData:
+    username: str
+    fullname: str
+    rating: int
+
+
+class UserService:
+    def __init__(self, path="users.json"):
+        self.path = path
+
+    def _get_dicts_user_data(self) -> list[dict[str, Any]]:
+        with open(self.path, "r", encoding="utf-8") as f:
+            return json.load(f)
+
+    def get_users_data(self) -> list[UserData]:
+        user_dicts = self._get_dicts_user_data()
+        result = []
+        for user_data in user_dicts:
+            result.append(UserData(**user_data))
+        return result
+
+    def get_by_username(self, username: str) -> UserData | None:
+        user_dicts = self._get_dicts_user_data()
+        for user_dict in user_dicts:
+            if user_dict.get("username") == username:
+                return UserData(**user_dict)
+
+    def add_user_data(self, user_data: UserData) -> None:
+        user_dicts = self._get_dicts_user_data()
+        user_dicts.append(user_data.__dict__)
+        with open(self.path, "w", encoding="utf-8") as f:
+            json.dump(user_dicts, f, ensure_ascii=False, indent=2)
+            
+    
+
+
+service = UserService()
+print("search", service.get_by_username("sasha2"))
+print(service.get_users_data())
+user_data = UserData("sasha2", "впвыа", 13)
+service.add_user_data(user_data)
