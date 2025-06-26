@@ -9,7 +9,7 @@ petya = User("petya", 23)
 sasha.hello()
 petya.hello()"""
 
-from datetime import datetime
+"""from datetime import datetime
 
 
 class User:
@@ -70,4 +70,67 @@ def main():
     game.end()
    
 
-main()
+    
+main()"""
+
+"""class User:
+    def __init__(self, username: str):
+        self.username = username
+        self._is_muted = False
+        self.role = "user"
+
+    def set_muted(self):
+        self._is_muted = True
+
+    def get_role_name(self):
+        return f"{self.role} {self.username}"
+
+    def write(self, message: str):
+        if not self._is_muted:
+            print(f"{self.get_role_name()}: {message}")
+        else:
+            print(f"{self.get_role_name()} молчит")
+
+
+class Admin(User):
+    def __init__(self, username: str, role="admin"):
+        super().__init__(username)
+        self.role = role
+
+    def set_muted(self):
+        pass
+
+    def mute(self, user: User):
+        user.set_muted()
+        print(f"Администратор {self.username} заглушил {user.username}")
+
+
+user1 = User("sasha")
+user1.write("Првиет всем!")
+admin1 = Admin("admin", "best_admin")
+admin1.write("Всем привет!")
+user1.write("********")
+admin1.mute(user1)
+user1.write("Я пошутил!")"""
+
+class Animal:
+    def __init__(self, name: str , color: str ):
+        self.name = name
+        self.color = color 
+        
+
+class Wolf(Animal):
+    def __init__(self, color: str ):
+        say = ("воет")
+        color = "серий"
+        print (f"волк иммеет {color} цвет, имеет возможность говорить {say}")
+      
+class Dog(Animal):
+    def __init__(self,name: str , color: str ):
+        say = ("гав")
+        color = "белый"
+        name = "Дастин"
+        print (f"собака иммеет {color} цвет, собаке зовут {name}, имеет возможность говорить {say}")
+
+
+
